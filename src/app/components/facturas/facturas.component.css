@@ -1,0 +1,26 @@
+/* Estilo para mostrar los elementos en una fila */
+.total-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .total-item {
+    flex: 1 1 30%; /* Esto hará que cada elemento ocupe un espacio proporcional */
+    text-align: center;
+    font-size: 1em;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  

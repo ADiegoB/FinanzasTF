@@ -1,0 +1,52 @@
+<h2>Gastos de la Factura {{ idFactura }}</h2>
+
+<!-- Formulario para registrar nuevo gasto -->
+<div>
+  <h3>Registrar Nuevo Gasto</h3>
+  <form (ngSubmit)="registrarGasto()">
+    <label for="montoGasto">Monto:</label>
+    <input type="number" id="montoGasto" [(ngModel)]="nuevoGasto.monto_gasto" name="montoGasto" required>
+
+    <label for="tipoGasto">Tipo de Gasto:</label>
+    <select id="tipoGasto" [(ngModel)]="nuevoGasto.tipo_gasto" name="tipoGasto" required>
+      <option [ngValue]="true">Final</option>
+      <option [ngValue]="false">Comienzo</option>
+    </select>
+
+    <button type="submit">Registrar Gasto</button>
+  </form>
+</div>
+
+<!-- Lista de gastos -->
+<h3>Lista de Gastos</h3>
+<ul>
+  <li *ngFor="let gasto of gastos">
+    <strong>Monto:</strong> {{ gasto.monto_gasto | currency }}<br>
+    <strong>Tipo de Gasto:</strong> {{ gasto.tipo_gasto ? 'Final' : 'Comienzo' }}<br>
+
+    <!-- Botones de edición y eliminación -->
+    <button (click)="iniciarEdicion(gasto)">Editar</button>
+    <button (click)="eliminarGasto(gasto.id_gasto)">Eliminar</button>
+
+    <div *ngIf="gastoEditar && gastoEditar.id_gasto === gasto.id_gasto">
+      <!-- Formulario para actualizar gasto -->
+       
+      <h4>Editar Gasto</h4>
+      <form (ngSubmit)="actualizarGasto()">
+        <label for="editMontoGasto">Monto:</label>
+        <input type="number" id="editMontoGasto" [(ngModel)]="gastoEditar.monto_gasto" name="editMontoGasto" required>
+
+        <label for="editTipoGasto">Tipo de Gasto:</label>
+        <select id="editTipoGasto" [(ngModel)]="gastoEditar.tipo_gasto" name="editTipoGasto" required>
+          <option [ngValue]="true">Final</option>
+          <option [ngValue]="false">Comienzo</option>
+        </select>
+
+        <button type="submit">Actualizar</button>
+        <button type="button" (click)="cancelarEdicion()">Cancelar</button>
+      </form>
+    </div>
+
+    <hr>
+  </li>
+</ul>

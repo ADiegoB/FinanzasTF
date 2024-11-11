@@ -1,0 +1,13 @@
+<h2>Iniciar Sesión</h2>
+<form [formGroup]="usuarioForm" (ngSubmit)="login()">
+  <div>
+    <label for="nombre">Nombre:</label>
+    <input id="nombre" formControlName="nombre" type="text">
+  </div>
+  <div>
+    <label for="clave">Clave:</label>
+    <input id="clave" formControlName="clave" type="password">
+  </div>
+  <button type="submit">Iniciar Sesión</button>
+  <button type="button" (click)="navigateToRegister()">Crear Usuario</button> <!-- Botón para crear usuario -->
+</form>

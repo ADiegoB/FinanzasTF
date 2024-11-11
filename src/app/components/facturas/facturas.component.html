@@ -1,0 +1,91 @@
+<div class="facturas">
+  <h2>Facturas de la Cartera</h2>
+
+  <!-- Botón para mostrar el formulario de nueva factura -->
+  <button (click)="mostrarFormularioRegistro()">Agregar Factura</button>
+
+  <!-- Formulario de Registro de Factura -->
+  <div *ngIf="mostrarFormulario">
+    <form (ngSubmit)="registrarFactura()">
+      <label for="nombre_factura">Nombre de la Factura:</label>
+      <input id="nombre_factura" [(ngModel)]="nuevaFactura.nombre_factura" name="nombre_factura" required>
+
+      <label for="valor_nominal">Valor Nominal:</label>
+      <input id="valor_nominal" [(ngModel)]="nuevaFactura.valor_nominal" name="valor_nominal" required type="number">
+
+      <label for="fecha_emision">Fecha de Emisión:</label>
+      <input id="fecha_emision" [(ngModel)]="nuevaFactura.fecha_emision" name="fecha_emision" required type="date">
+
+      <label for="fecha_vencimiento">Fecha de Vencimiento:</label>
+      <input id="fecha_vencimiento" [(ngModel)]="nuevaFactura.fecha_vencimiento" name="fecha_vencimiento" required type="date">
+
+      <label for="estado_factura">Estado de la Factura:</label>
+      <select [(ngModel)]="estadoFacturaTexto" id="estadoFactura">
+        <option value="No pagado">No pagado</option>
+        <option value="Pagado">Pagado</option>
+      </select>
+
+      <button type="submit">Registrar Factura</button>
+    </form>
+  </div>
+
+  <!-- Mostrar las facturas si existen -->
+  <div *ngIf="facturas.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>ID Factura</th>
+          <th>Nombre Factura</th>
+          <th>Valor Nominal</th>
+          <th>Fecha Emisión</th>
+          <th>Fecha Vencimiento</th>
+          <th>Estado Factura</th>
+          <th>Tasa Efectiva (%)</th>
+          <th>Tasa Descontada (%)</th>
+          <th>Descuento</th>
+          <th>Valor Neto</th>
+          <th>Valor Recibido</th>
+          <th>Valor Entregado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let factura of facturas">
+          <td>{{ factura.id_factura }}</td>
+          <td>{{ factura.nombre_factura }}</td>
+          <td>{{ factura.valor_nominal | currency:'USD':true }}</td>
+          <td>{{ factura.fecha_emision | date:'dd-MM-yyyy' }}</td>
+          <td>{{ factura.fecha_vencimiento | date:'dd-MM-yyyy' }}</td>
+          <td>{{ factura.estado_factura ? 'No pagado' : 'Pagado' }}</td>
+          <td>{{ (factura.tasa_efectiva * 100) | number:'1.2-2' }}%</td>
+          <td>{{ (factura.tasa_descontada * 100) | number:'1.2-2' }}%</td>
+          <td>{{ factura.descuento | currency:'USD':true }}</td>
+          <td>{{ factura.valor_neto | currency:'USD':true }}</td>
+          <td>{{ factura.valor_recibido | currency:'USD':true }}</td>
+          <td>{{ factura.valor_entregado | currency:'USD':true }}</td>
+          <td>
+            <button (click)="modificarFactura(factura)">Modificar</button>
+            <button (click)="eliminarFactura(factura.id_factura)">Eliminar</button>
+            <button (click)="irAGastos(factura.id_factura)">Ver Gastos</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Total de la cartera -->
+  <div *ngIf="totalCartera">
+    <h3>Total de la Cartera</h3>
+    <table class="table">
+      <tr>
+        <td><strong>Id Cartera:</strong> {{ totalCartera.carteraId }}</td>
+        <td><strong>Total Descuento:</strong> {{ totalCartera.totalDescuento | number:'1.2-2' }}</td>
+        <td><strong>Total Valor Neto:</strong> {{ totalCartera.totalValorNeto | number:'1.2-2' }}</td>
+        <td><strong>Total Valor Recibido:</strong> {{ totalCartera.totalValorRecibido | number:'1.2-2' }}</td>
+        <td><strong>Total Valor Entregado:</strong> {{ totalCartera.totalValorEntregado | number:'1.2-2' }}</td>
+        <td><strong>Total Días:</strong> {{ totalCartera.totalDias }}</td>
+        <td><strong>TCEA:</strong> {{ totalCartera.tcea | number:'1.2-2' }}%</td>
+      </tr>
+    </table>
+  </div>
+</div>
