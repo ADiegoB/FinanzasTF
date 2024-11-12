@@ -1,13 +1,21 @@
 <h2>Iniciar Sesión</h2>
 <form [formGroup]="usuarioForm" (ngSubmit)="login()">
-  <div>
+  <div class="form-group">
     <label for="nombre">Nombre:</label>
     <input id="nombre" formControlName="nombre" type="text">
+    <div *ngIf="usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched" class="error-message">
+      El nombre es requerido.
+    </div>
   </div>
-  <div>
+  
+  <div class="form-group">
     <label for="clave">Clave:</label>
     <input id="clave" formControlName="clave" type="password">
+    <div *ngIf="usuarioForm.get('clave')?.invalid && usuarioForm.get('clave')?.touched" class="error-message">
+      La clave es requerida.
+    </div>
   </div>
-  <button type="submit">Iniciar Sesión</button>
-  <button type="button" (click)="navigateToRegister()">Crear Usuario</button> <!-- Botón para crear usuario -->
+
+  <button type="submit" class="submit-btn">Iniciar Sesión</button>
+  <button type="button" class="create-btn" (click)="navigateToRegister()">Crear Usuario</button>
 </form>

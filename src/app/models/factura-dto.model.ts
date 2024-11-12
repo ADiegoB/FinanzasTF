@@ -5,7 +5,7 @@ export interface FacturaDTO {
 
     fecha_emision: string; // Puede ser tipo Date si prefieres usar objetos Date
     fecha_vencimiento: string;
-     // Igual a la fecha de emisión
+   
     estado_factura: boolean; // Considerando que se guarda como String
     id_cartera: number;
     tasa_efectiva: number;

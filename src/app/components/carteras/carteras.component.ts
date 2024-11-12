@@ -6,6 +6,7 @@ import { TasaDTO } from 'src/app/models/tasa-dto.model';
 import { MonedaDTO } from 'src/app/models/moneda-dto.model';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-carteras',
   templateUrl: './carteras.component.html',
@@ -25,7 +26,7 @@ export class CarterasComponent implements OnInit {
     id_moneda: null
   };
   mostrarFormulario: boolean = false;
-  constructor(private carteraService: CarterasService, private datePipe: DatePipe, private router: Router) { }
+  constructor(private carteraService: CarterasService, private datePipe: DatePipe, private router: Router,private location: Location) { }
 
   ngOnInit(): void {
     this.loadCarteras();
@@ -42,6 +43,9 @@ export class CarterasComponent implements OnInit {
         console.error('Error al cargar carteras', error);
       }
     );
+  }
+  retroceder() {
+    this.location.back();
   }
   loadUsuarios(): void {
     this.carteraService.getUsuarios().subscribe(

@@ -7,6 +7,7 @@ import { CarterasService } from 'src/app/services/carteras/carteras.service';
 import { FacturaDTO } from 'src/app/models/factura-dto.model';
 import { DatePipe } from '@angular/common';
 import { privateDecrypt } from 'crypto';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-facturas',
   templateUrl: './facturas.component.html',
@@ -27,12 +28,14 @@ export class FacturasComponent implements OnInit {
   mostrarFormulario: boolean = false;
   estadoFacturaTexto: string = 'No pagado'; 
   facturaSeleccionada: FacturaDTO | null = null;
+  facturaParaEditar: FacturaDTO | null = null;
   constructor(
     private route: ActivatedRoute,
     private facturaService: FacturasService,
     private datePipe: DatePipe,
     private router: Router,
-    private carteraService: CarterasService
+    private carteraService: CarterasService,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -43,6 +46,9 @@ export class FacturasComponent implements OnInit {
     });
 
     
+  }
+  retroceder() {
+    this.location.back();
   }
   loadFacturas(): void {
     this.facturaService.getFacturasByCartera(this.idCartera).subscribe(
@@ -79,31 +85,48 @@ export class FacturasComponent implements OnInit {
 
   // Registrar la nueva factura
   registrarFactura(): void {
+    // Validar que todos los campos requeridos estén completos
+    if (!this.nuevaFactura.nombre_factura || this.nuevaFactura.valor_nominal <= 0 || !this.nuevaFactura.fecha_emision || !this.nuevaFactura.fecha_vencimiento) {
+      alert('Por favor, complete todos los campos antes de registrar la factura.');
+      return; // No continuar con el registro si falta algún campo
+    }
+  
     // Convertir las fechas al formato ISO "yyyy-MM-dd"
     const fechaEmisionFormateada = this.convertirFechaAFormatoISO(this.nuevaFactura.fecha_emision);
     const fechaVencimientoFormateada = this.convertirFechaAFormatoISO(this.nuevaFactura.fecha_vencimiento);
-
+    
     // Asignar las fechas convertidas y el id_cartera
     this.nuevaFactura.fecha_emision = fechaEmisionFormateada;
     this.nuevaFactura.fecha_vencimiento = fechaVencimientoFormateada;
     this.nuevaFactura.id_cartera = this.idCartera;
-
+    
     // Convertir estado_factura a booleano según la opción seleccionada
     this.nuevaFactura.estado_factura = this.estadoFacturaTexto === 'No pagado';
-
+    
     // Enviar los datos al backend
     this.facturaService.crearFactura(this.nuevaFactura).subscribe(
       response => {
         console.log('Factura registrada con éxito', response);
         this.loadFacturas(); // Recargar las facturas
-    
         this.mostrarFormulario = false; // Cerrar el formulario
+  
+        // Limpiar el formulario para la próxima factura
+        this.nuevaFactura = {
+          nombre_factura: '',
+          valor_nominal: 0,
+          fecha_emision: '' as string | null,
+          fecha_vencimiento: '' as string | null,
+          estado_factura: true,
+          id_cartera: 0
+        };
       },
       error => {
         console.error('Error al registrar la factura', error);
       }
     );
   }
+  
+  
 
   // Convertir la fecha a formato ISO "yyyy-MM-dd"
   convertirFechaAFormatoISO(fecha: string | null): string {

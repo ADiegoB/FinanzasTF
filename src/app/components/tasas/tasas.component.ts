@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TasaDTO } from 'src/app/models/tasa-dto.model';
 import { TasasService } from 'src/app/services/tasas/tasas.service';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-tasas',
   templateUrl: './tasas.component.html',
@@ -12,7 +12,7 @@ export class TasasComponent implements OnInit {
   nuevaTasa: TasaDTO = { id_tasa: 0, valor: 0, tipo_tasa: '' };
   tasaEditar: TasaDTO | null = null;
 
-  constructor(private tasasService: TasasService) { }
+  constructor(private tasasService: TasasService, private location: Location) { }
 
   ngOnInit(): void {
     this.cargarTasas();
@@ -27,8 +27,17 @@ export class TasasComponent implements OnInit {
       }
     );
   }
+  retroceder() {
+    this.location.back();
+  }
 
   registrarTasa(): void {
+    // Validar que los campos no estén vacíos
+    if (!this.nuevaTasa.valor || !this.nuevaTasa.tipo_tasa) {
+      alert('Por favor, completa todos los campos antes de registrar la tasa.');
+      return;  // No continuar con el registro si hay campos vacíos
+    }
+  
     this.tasasService.crearTasa(this.nuevaTasa).subscribe(
       () => {
         console.log('Tasa registrada con éxito');
@@ -59,6 +68,12 @@ export class TasasComponent implements OnInit {
 
   actualizarTasa(): void {
     if (this.tasaEditar) {
+      // Validar que los campos no estén vacíos
+      if (!this.tasaEditar.valor || !this.tasaEditar.tipo_tasa) {
+        alert('Por favor, completa todos los campos antes de actualizar la tasa.');
+        return;  // No continuar con la actualización si hay campos vacíos
+      }
+  
       this.tasasService.modificarTasa(this.tasaEditar.id_tasa, this.tasaEditar).subscribe(
         () => {
           console.log('Tasa modificada con éxito');

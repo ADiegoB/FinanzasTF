@@ -6,6 +6,7 @@ import { TasaDTO } from 'src/app/models/tasa-dto.model';
 import { MonedaDTO } from 'src/app/models/moneda-dto.model';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth/auth.service';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -13,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class MenuComponent {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private authService: AuthService) { }
 
   irAComponent(componente: string): void {
     switch (componente) {
@@ -29,6 +30,9 @@ export class MenuComponent {
       default:
         break;
     }
+  }
+  cerrarSesion(): void {
+    this.authService.logout(); // Llama al servicio para cerrar sesión
   }
  
 }

@@ -1,7 +1,8 @@
 <!-- monedas.component.html -->
 <div class="monedas-container">
     <h1>Monedas</h1>
-  
+    <!-- Botón para retroceder -->
+    <button (click)="retroceder()">Volver</button>
     <!-- Formulario para registrar una nueva moneda -->
     <div *ngIf="!monedaEditar">
       <h2>Registrar nueva moneda</h2>

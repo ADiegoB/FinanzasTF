@@ -1,4 +1,5 @@
 <h2>Crear Usuario</h2>
+
 <form [formGroup]="registerForm" (ngSubmit)="register()">
   <div>
     <label for="nombre_usuario">Nombre:</label>
@@ -8,6 +9,10 @@
     <label for="clave">Clave:</label>
     <input id="clave" formControlName="clave" type="password">
   </div>
-  <button type="submit">Registrar</button>
+  <button class ="registro "type="submit">Registrar</button>
+  
 </form>
+<button class="volver" (click)="retroceder()">Volver</button>
+
+
 

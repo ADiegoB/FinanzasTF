@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GastoDTO } from 'src/app/models/gasto-dto.model';
 import { GastosService } from 'src/app/services/gastos/gastos.service';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-gastos',
   templateUrl: './gastos.component.html',
@@ -13,13 +13,17 @@ export class GastosComponent implements OnInit {
   gastos: GastoDTO[] = [];
   nuevoGasto: GastoDTO = { id_gasto: 0, monto_gasto: 0, tipo_gasto: false, id_factura: 0 };
   gastoEditar: GastoDTO | null = null;
-  constructor(private route: ActivatedRoute, private gastosService: GastosService) { }
+  constructor(private route: ActivatedRoute, private gastosService: GastosService, private location: Location) { }
 
   ngOnInit(): void {
      // Obtener el idFactura desde los parámetros de la ruta
      this.idFactura = Number(this.route.snapshot.paramMap.get('idFactura'));
      this.cargarGastos();
   }
+  retroceder() {
+    this.location.back();
+  }
+
   cargarGastos(): void {
     this.gastosService.getGastosByFacturaId(this.idFactura).subscribe(
       (response) => {
@@ -32,6 +36,11 @@ export class GastosComponent implements OnInit {
   }
   
   registrarGasto(): void {
+    if (this.nuevoGasto.monto_gasto <= 0 || this.nuevoGasto.tipo_gasto == null) {
+      alert('Por favor, complete todos los campos correctamente.');
+      return;
+    }
+
     this.nuevoGasto.id_factura = this.idFactura; // Asocia el gasto a la factura actual
     this.gastosService.crearGasto(this.idFactura, this.nuevoGasto).subscribe(
       () => {
@@ -42,7 +51,7 @@ export class GastosComponent implements OnInit {
         console.error('Error al registrar el gasto', error);
       }
     );
-}
+  }
 
 
   eliminarGasto(idGasto: number): void {

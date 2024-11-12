@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
+import { Router } from '@angular/router';
 interface AuthResponse {
  
   id_usuario: number;       // ID del usuario
@@ -23,7 +24,7 @@ interface RegisterDTO {
 export class AuthService {
   private apiURL = 'http://localhost:8080/api/auth/login';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(credentials: CredentialsDTO): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(this.apiURL, credentials).pipe(
@@ -61,5 +62,6 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token'); // Elimina el token de localStorage
     localStorage.removeItem('userId'); // Elimina el ID de usuario
+    this.router.navigate(['/login']);
   }
 }
