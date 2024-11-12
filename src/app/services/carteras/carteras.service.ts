@@ -8,68 +8,58 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class CarterasService {
-  private apiURL = 'http://localhost:8080/api/auth/carteras/get';
-  private reg = 'http://localhost:8080/api/auth/carteras/register';
-  private usuariosURL = 'http://localhost:8080/api/auth/usuarios'; // Suponiendo que este es el endpoint para usuarios
-  private tasasURL = 'http://localhost:8080/api/auth/tasas/get'; // Suponiendo que este es el endpoint para tasas
-  private monedasURL = 'http://localhost:8080/api/auth/monedas/get'; // Suponiendo que este es el endpoint para monedas
-  private baseUrl = 'http://localhost:8080/api/auth/carteras';
+  private apiURL = 'http://localhost:8080/api/carteras/get';
+  private reg = 'http://localhost:8080/api/carteras/register';
+  private usuariosURL = 'http://localhost:8080/api/usuarios'; // Suponiendo que este es el endpoint para usuarios
+  private tasasURL = 'http://localhost:8080/api/tasas/get'; // Suponiendo que este es el endpoint para tasas
+  private monedasURL = 'http://localhost:8080/api/monedas/get'; // Suponiendo que este es el endpoint para monedas
+  private baseUrl = 'http://localhost:8080/api/carteras';
   constructor(private http: HttpClient, private authService: AuthService) { }
-
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.authService.getToken(); // Obtener el token desde el servicio de autenticación
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`); // Agregar el token en la cabecera
+    }
+    return headers;
+  }
+  // Obtener las carteras
   getCarteras(): Observable<any[]> {
-    const token = this.authService.getToken(); // Obtener el token desde AuthService
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
+    return this.http.get<any[]>(this.apiURL, { headers: this.getAuthHeaders() }); // Agregar los encabezados de autorización
+  }
 
-    return this.http.get<any[]>(this.apiURL, { headers }); // Realizar la solicitud GET
-  }
+  // Obtener los totales de una cartera por su id
   getTotalesCartera(idCartera: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${idCartera}/totales`);
+    return this.http.get<any>(`${this.baseUrl}/${idCartera}/totales`, { headers: this.getAuthHeaders() });
   }
-  
+
+  // Obtener usuarios
   getUsuarios(): Observable<any[]> {
-    const token = this.authService.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.get<any[]>(this.usuariosURL, { headers });
+    return this.http.get<any[]>(this.usuariosURL, { headers: this.getAuthHeaders() });
   }
 
   // Obtener tasas
   getTasas(): Observable<any[]> {
-    const token = this.authService.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.get<any[]>(this.tasasURL, { headers });
+    return this.http.get<any[]>(this.tasasURL, { headers: this.getAuthHeaders() });
   }
 
   // Obtener monedas
   getMonedas(): Observable<any[]> {
-    const token = this.authService.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.get<any[]>(this.monedasURL, { headers });
+    return this.http.get<any[]>(this.monedasURL, { headers: this.getAuthHeaders() });
   }
 
   // Crear una nueva cartera
   crearCartera(cartera: any): Observable<any> {
-    const token = this.authService.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.post<any>(this.reg, cartera, { headers });
+    return this.http.post<any>(this.reg, cartera, { headers: this.getAuthHeaders() });
   }
 
+  // Eliminar una cartera por su id
   eliminarCartera(idCartera: number): Observable<void> {
-
-    return this.http.delete<void>(`${this.baseUrl}/eliminar/${idCartera}`);
+    return this.http.delete<void>(`${this.baseUrl}/eliminar/${idCartera}`, { headers: this.getAuthHeaders() });
   }
 
+  // Modificar una cartera existente
   modificarCartera(idCartera: number, cartera: CarteraDTO): Observable<void> {
-
-    return this.http.put<void>(`${this.baseUrl}/${idCartera}`, cartera);
+    return this.http.put<void>(`${this.baseUrl}/${idCartera}`, cartera, { headers: this.getAuthHeaders() });
   }
 }

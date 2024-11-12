@@ -1,39 +1,59 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MonedaDTO } from 'src/app/models/moneda-dto.model';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MonedasService {
-  private apiUrl = `http://localhost:8080/api/auth/monedas`;
-  constructor(private http: HttpClient) { }
+  private apiUrl = `http://localhost:8080/api/monedas`;
+  constructor(private http: HttpClient, private authService: AuthService) { }
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.authService.getToken(); // Obtener el token desde el servicio de autenticación
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`); // Agregar el token en la cabecera
+    }
+    return headers;
+  }
+
   getMonedas(): Observable<MonedaDTO[]> {
-    return this.http.get<MonedaDTO[]>(`${this.apiUrl}/get`);
+    return this.http.get<MonedaDTO[]>(`${this.apiUrl}/get`, {
+      headers: this.getAuthHeaders() // Agregar los encabezados de autorización
+    });
   }
 
-  // Obtener una moneda por su id
   getMoneda(id: number): Observable<MonedaDTO> {
-    return this.http.get<MonedaDTO>(`${this.apiUrl}/${id}`);
+    return this.http.get<MonedaDTO>(`${this.apiUrl}/${id}`, {
+      headers: this.getAuthHeaders() // Agregar los encabezados de autorización
+    });
   }
 
-  // Registrar una nueva moneda
   crearMoneda(moneda: MonedaDTO): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/register`, moneda);
+    return this.http.post<void>(`${this.apiUrl}/register`, moneda, {
+      headers: this.getAuthHeaders() // Agregar los encabezados de autorización
+    });
   }
 
-  // Modificar una moneda existente
   modificarMoneda(id: number, moneda: MonedaDTO): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}`, moneda);
+    return this.http.put<void>(`${this.apiUrl}/${id}`, moneda, {
+      headers: this.getAuthHeaders() // Agregar los encabezados de autorización
+    });
   }
 
-  // Eliminar una moneda por su id
   eliminarMoneda(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/eliminar/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/eliminar/${id}`, {
+      headers: this.getAuthHeaders() // Agregar los encabezados de autorización
+    });
   }
-  
+
   obtenerSimboloPorCarteraId(idCartera: number) {
-    return this.http.get<string>(`http://localhost:8080/api/auth/monedas/simbolo/${idCartera}`, { responseType: 'text' as 'json' });
+    return this.http.get<string>(`http://localhost:8080/api/monedas/simbolo/${idCartera}`, {
+      responseType: 'text' as 'json',
+      headers: this.getAuthHeaders() // Agregar los encabezados de autorización
+    });
   }
 }

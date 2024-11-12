@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 interface AuthResponse {
  
   id_usuario: number;       // ID del usuario
@@ -33,35 +34,53 @@ export class AuthService {
       }),
       catchError(error => {
         console.error('Error en el inicio de sesión', error);
-        return throwError(error); // Lanza el error para que pueda ser manejado en el componente
+        return throwError(error);
       })
     );
   }
+
   registerUser(user: RegisterDTO): Observable<AuthResponse> {
-    // Asegúrate de que la URL coincida con la del backend
     return this.http.post<AuthResponse>('http://localhost:8080/api/auth/usuarios/register', user);
   }
 
   // Método para guardar el token en localStorage
   setSession(authResult: AuthResponse): void {
-    localStorage.setItem('token', authResult.token); // Guardar el token en localStorage
-    localStorage.setItem('userId', authResult.id_usuario.toString()); // Guardar el ID de usuario
-
+    localStorage.setItem('token', authResult.token);
+    localStorage.setItem('userId', authResult.id_usuario.toString());
   }
+
+  // Método para recuperar el token desde localStorage
   getToken(): string | null {
-    return localStorage.getItem('token'); // Recuperar el token desde localStorage
+    return localStorage.getItem('token');
   }
 
-  // Método para verificar si el usuario está autenticado
+  // Método para verificar si el token ha expirado
+  isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return true;  // Si no hay token, está expirado
+
+    try {
+      const decoded: any = jwtDecode(token); // Decodificamos el JWT
+      const expirationTime = decoded.exp * 1000; // Expiración en milisegundos
+      const currentTime = new Date().getTime(); // Hora actual en milisegundos
+
+      return currentTime >= expirationTime; // Si la hora actual es mayor que la hora de expiración, el token ha expirado
+    } catch (error) {
+      console.error('Error decodificando el token', error);
+      return true; // Si ocurre un error al decodificar, consideramos que el token ha expirado
+    }
+  }
+
+  // Método para verificar si el usuario está autenticado (token válido)
   isLoggedIn(): boolean {
-    const token = localStorage.getItem('token');
-    return !!token; // Retorna true si hay un token, false si no
+    const token = this.getToken();
+    return token ? !this.isTokenExpired() : false; // Si token es null o vacío, devuelve false
   }
 
   // Método para cerrar sesión
   logout(): void {
-    localStorage.removeItem('token'); // Elimina el token de localStorage
-    localStorage.removeItem('userId'); // Elimina el ID de usuario
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
     this.router.navigate(['/login']);
   }
 }

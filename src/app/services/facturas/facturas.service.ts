@@ -7,33 +7,40 @@ import { FacturaDTO } from 'src/app/models/factura-dto.model';
   providedIn: 'root'
 })
 export class FacturasService {
-  private apiURL = 'http://localhost:8080/api/auth/facturas';
-  private reg = 'http://localhost:8080/api/auth/facturas/register';
+  private apiURL = 'http://localhost:8080/api/facturas';
+  private reg = 'http://localhost:8080/api/facturas/register';
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  getFacturas(): Observable<any[]> {
+  private getAuthHeaders(): HttpHeaders {
     const token = this.authService.getToken(); // Obtener el token desde AuthService
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
-    return this.http.get<any[]>(this.apiURL, { headers }); // Realizar la solicitud GET
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`); // Agregar el token en la cabecera
+    }
+    return headers;
   }
-  getFacturasByCartera(idCartera: number): Observable<FacturaDTO[]> {
-    return this.http.get<FacturaDTO[]>(`${this.apiURL}/cartera/${idCartera}`);
-  }
-  crearFactura(factura: any): Observable<any> {
-    const url = this.reg;  // URL para crear una nueva factura
-    return this.http.post<any>(url, factura);
-  }
-
-    // Método para modificar una factura
-    modificarFactura(factura: FacturaDTO, id: number): Observable<any> {
-      return this.http.put<any>(`${this.apiURL}/modificar/${id}`, factura);
+    // Obtener todas las facturas
+    getFacturas(): Observable<any[]> {
+      return this.http.get<any[]>(this.apiURL, { headers: this.getAuthHeaders() }); // Solicitud GET con token
     }
   
-    // Método para eliminar una factura
+    // Obtener facturas por ID de cartera
+    getFacturasByCartera(idCartera: number): Observable<FacturaDTO[]> {
+      return this.http.get<FacturaDTO[]>(`${this.apiURL}/cartera/${idCartera}`, { headers: this.getAuthHeaders() }); // Solicitud GET con token
+    }
+  
+    // Crear una nueva factura
+    crearFactura(factura: any): Observable<any> {
+      return this.http.post<any>(this.reg, factura, { headers: this.getAuthHeaders() }); // Solicitud POST con token
+    }
+  
+    // Modificar una factura
+    modificarFactura(factura: FacturaDTO, id: number): Observable<any> {
+      return this.http.put<any>(`${this.apiURL}/modificar/${id}`, factura, { headers: this.getAuthHeaders() }); // Solicitud PUT con token
+    }
+  
+    // Eliminar una factura
     eliminarFactura(id: number): Observable<any> {
-      return this.http.delete<any>(`${this.apiURL}/eliminar/${id}`);
+      return this.http.delete<any>(`${this.apiURL}/eliminar/${id}`, { headers: this.getAuthHeaders() }); // Solicitud DELETE con token
     }
 }

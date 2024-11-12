@@ -15,7 +15,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { MonedasComponent } from './components/monedas/monedas.component';
 import { TasasComponent } from './components/tasas/tasas.component';
 import { GastosComponent } from './components/gastos/gastos.component';
-
+import { AuthInterceptor } from './auth.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { GastosComponent } from './components/gastos/gastos.component';
     MonedasComponent,
     TasasComponent,
     GastosComponent,
+ 
   ],
   imports: [
     BrowserModule,
@@ -38,7 +40,10 @@ import { GastosComponent } from './components/gastos/gastos.component';
     BrowserAnimationsModule,
     HttpClientModule
   ],
-  providers: [DatePipe],
+  providers: [
+    DatePipe,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }  // Registramos el interceptor
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

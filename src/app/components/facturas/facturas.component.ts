@@ -18,7 +18,7 @@ export class FacturasComponent implements OnInit {
   facturas: FacturaDTO[] = [];
   idCartera! : number;
   totalCartera: any;
-   simboloMoneda: string = '';
+  simboloMoneda: string = '';
   nuevaFactura = {
     nombre_factura: '',
     valor_nominal: 0,
@@ -75,9 +75,10 @@ obtenerSimboloMoneda(): void {
           // Convertir las fechas al formato ISO antes de usar DatePipe
           factura.fecha_emision = this.convertirFechaAFormatoISO(factura.fecha_emision);
           factura.fecha_vencimiento = this.convertirFechaAFormatoISO(factura.fecha_vencimiento);
-          this.loadTotalesCartera();
+          
           return factura;
         });
+        this.loadTotalesCartera();
       },
       error => {
         console.error('Error al cargar las facturas', error);
