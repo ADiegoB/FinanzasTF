@@ -8,6 +8,7 @@ import { FacturaDTO } from 'src/app/models/factura-dto.model';
 import { DatePipe } from '@angular/common';
 import { privateDecrypt } from 'crypto';
 import { Location } from '@angular/common';
+import { MonedasService } from 'src/app/services/monedas/monedas.service';
 @Component({
   selector: 'app-facturas',
   templateUrl: './facturas.component.html',
@@ -17,6 +18,7 @@ export class FacturasComponent implements OnInit {
   facturas: FacturaDTO[] = [];
   idCartera! : number;
   totalCartera: any;
+   simboloMoneda: string = '';
   nuevaFactura = {
     nombre_factura: '',
     valor_nominal: 0,
@@ -25,6 +27,7 @@ export class FacturasComponent implements OnInit {
     estado_factura: true,
     id_cartera: 0
   };
+  
   mostrarFormulario: boolean = false;
   estadoFacturaTexto: string = 'No pagado'; 
   facturaSeleccionada: FacturaDTO | null = null;
@@ -35,18 +38,33 @@ export class FacturasComponent implements OnInit {
     private datePipe: DatePipe,
     private router: Router,
     private carteraService: CarterasService,
-    private location: Location
+    private location: Location,
+    private monedaService: MonedasService
   ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.idCartera = +params['idCartera']; // Obtener el id de la cartera desde la ruta
+      console.log('ID de Cartera:', this.idCartera); 
       this.loadFacturas();
       this.loadTotalesCartera();
+      this.obtenerSimboloMoneda();
     });
-
-    
   }
+// En facturas.component.ts
+obtenerSimboloMoneda(): void {
+  this.monedaService.obtenerSimboloPorCarteraId(this.idCartera).subscribe(
+    (response: string) => {
+      console.log('Respuesta del símbolo de la moneda:', response);
+      this.simboloMoneda = response;  // Asigna el valor directamente
+    },
+    (error) => {
+      console.error('Error al obtener el símbolo de la moneda', error);
+    }
+  );
+}
+
+  
   retroceder() {
     this.location.back();
   }

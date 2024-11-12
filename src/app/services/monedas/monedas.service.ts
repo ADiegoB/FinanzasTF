@@ -32,4 +32,8 @@ export class MonedasService {
   eliminarMoneda(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/eliminar/${id}`);
   }
+  
+  obtenerSimboloPorCarteraId(idCartera: number) {
+    return this.http.get<string>(`http://localhost:8080/api/auth/monedas/simbolo/${idCartera}`, { responseType: 'text' as 'json' });
+  }
 }

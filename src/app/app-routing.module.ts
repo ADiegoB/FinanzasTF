@@ -20,6 +20,7 @@ const routes: Routes = [
   { path: 'moneda', component: MonedasComponent},
   { path: 'tasa', component: TasasComponent},
   {path: 'gasto/:idFactura', component: GastosComponent}
+  
 ];
 
 @NgModule({
