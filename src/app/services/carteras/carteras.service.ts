@@ -15,6 +15,7 @@ export class CarterasService {
   private monedasURL = 'http://localhost:8080/api/monedas/get'; // Suponiendo que este es el endpoint para monedas
   private baseUrl = 'http://localhost:8080/api/carteras';
   constructor(private http: HttpClient, private authService: AuthService) { }
+
   private getAuthHeaders(): HttpHeaders {
     const token = this.authService.getToken(); // Obtener el token desde el servicio de autenticación
     let headers = new HttpHeaders();
@@ -59,7 +60,7 @@ export class CarterasService {
   }
 
   // Modificar una cartera existente
-  modificarCartera(idCartera: number, cartera: CarteraDTO): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/${idCartera}`, cartera, { headers: this.getAuthHeaders() });
+  modificarCartera( cartera: CarteraDTO,idCartera: number,): Observable<any> {
+  return this.http.put<void>(`${this.baseUrl}/modificar/${idCartera}`, cartera, { headers: this.getAuthHeaders() });
   }
 }
