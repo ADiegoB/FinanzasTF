@@ -7,8 +7,8 @@ import { FacturaDTO } from 'src/app/models/factura-dto.model';
   providedIn: 'root'
 })
 export class FacturasService {
-  private apiURL = 'http://localhost:8080/api/facturas';
-  private reg = 'http://localhost:8080/api/facturas/register';
+  private apiURL = 'https://finanzasbackend-18vd.onrender.com/api/facturas';
+  private reg = 'https://finanzasbackend-18vd.onrender.com/api/facturas/register';
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   private getAuthHeaders(): HttpHeaders {

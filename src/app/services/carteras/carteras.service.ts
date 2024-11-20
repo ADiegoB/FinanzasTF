@@ -8,12 +8,12 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class CarterasService {
-  private apiURL = 'http://localhost:8080/api/carteras/get';
-  private reg = 'http://localhost:8080/api/carteras/register';
-  private usuariosURL = 'http://localhost:8080/api/usuarios'; // Suponiendo que este es el endpoint para usuarios
-  private tasasURL = 'http://localhost:8080/api/tasas/get'; // Suponiendo que este es el endpoint para tasas
-  private monedasURL = 'http://localhost:8080/api/monedas/get'; // Suponiendo que este es el endpoint para monedas
-  private baseUrl = 'http://localhost:8080/api/carteras';
+  private apiURL = 'https://finanzasbackend-18vd.onrender.com/api/carteras/get';
+  private reg = 'https://finanzasbackend-18vd.onrender.com/api/carteras/register';
+  private usuariosURL = 'https://finanzasbackend-18vd.onrender.com/api/usuarios'; // Suponiendo que este es el endpoint para usuarios
+  private tasasURL = 'https://finanzasbackend-18vd.onrender.com/api/tasas/get'; // Suponiendo que este es el endpoint para tasas
+  private monedasURL = 'https://finanzasbackend-18vd.onrender.com/api/monedas/get'; // Suponiendo que este es el endpoint para monedas
+  private baseUrl = 'https://finanzasbackend-18vd.onrender.com/api/carteras';
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   private getAuthHeaders(): HttpHeaders {

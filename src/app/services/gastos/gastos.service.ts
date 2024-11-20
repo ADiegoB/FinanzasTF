@@ -8,8 +8,8 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class GastosService {
-  private baseUrl = 'http://localhost:8080/api/gastos';
-  private url = 'http://localhost:8080/api';
+  private baseUrl = 'https://finanzasbackend-18vd.onrender.com/api/gastos';
+  private url = 'https://finanzasbackend-18vd.onrender.com/api';
   constructor(private http: HttpClient, private authService: AuthService) { }
   private getAuthHeaders(): HttpHeaders {
     const token = this.authService.getToken(); // Obtener el token desde el servicio de autenticación

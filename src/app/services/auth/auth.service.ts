@@ -23,7 +23,7 @@ interface RegisterDTO {
 })
 
 export class AuthService {
-  private apiURL = 'http://localhost:8080/api/auth/login';
+  private apiURL = 'https://finanzasbackend-18vd.onrender.com/api/auth/login';
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -40,7 +40,7 @@ export class AuthService {
   }
 
   registerUser(user: RegisterDTO): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>('http://localhost:8080/api/auth/usuarios/register', user);
+    return this.http.post<AuthResponse>('https://finanzasbackend-18vd.onrender.com/api/auth/usuarios/register', user);
   }
 
   // Método para guardar el token en localStorage

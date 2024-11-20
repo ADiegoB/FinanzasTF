@@ -8,7 +8,7 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class TasasService {
-  private apiUrl = 'http://localhost:8080/api/tasas'
+  private apiUrl = 'https://finanzasbackend-18vd.onrender.com/api/tasas'
   constructor(private http: HttpClient,  private authService: AuthService) { }
    // Obtener todas las tasas
  // Función para obtener los encabezados con el token de autorización

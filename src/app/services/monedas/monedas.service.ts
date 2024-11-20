@@ -8,7 +8,7 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class MonedasService {
-  private apiUrl = `http://localhost:8080/api/monedas`;
+  private apiUrl = `https://finanzasbackend-18vd.onrender.com/api/monedas`;
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   private getAuthHeaders(): HttpHeaders {
