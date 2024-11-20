@@ -51,7 +51,7 @@ export class MonedasService {
   }
 
   obtenerSimboloPorCarteraId(idCartera: number) {
-    return this.http.get<string>(`http://localhost:8080/api/monedas/simbolo/${idCartera}`, {
+    return this.http.get<string>(`https://finanzasbackend-18vd.onrender.com/api/monedas/simbolo/${idCartera}`, {
       responseType: 'text' as 'json',
       headers: this.getAuthHeaders() // Agregar los encabezados de autorización
     });
